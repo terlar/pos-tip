@@ -817,8 +817,6 @@ of display. Omitting FRAME means use display that selected frame is in."
 	       pos-tip-internal-border-width)
 	    1))))
 
-(make-face 'pos-tip-temp)
-
 (defun pos-tip-show
   (string &optional tip-color pos window timeout width frame-coordinates dx dy)
   "Show STRING in a tooltip, which is a small X window, at POS in WINDOW
@@ -867,7 +865,11 @@ See also `pos-tip-show-no-propertize'."
   (let* ((frame (window-frame window))
 	 (max-width (pos-tip-x-display-width frame))
 	 (max-height (pos-tip-x-display-height frame))
-	 (w-h (pos-tip-string-width-height string)))
+	 (w-h (pos-tip-string-width-height string))
+         (fg (pos-tip-compute-foreground-color tip-color))
+         (bg (pos-tip-compute-background-color tip-color))
+         (tip-face-attrs (list :font (frame-parameter frame 'font)
+                               :foreground fg :background bg)))
     (cond
      ((and width
 	   (> (car w-h) width))
@@ -877,15 +879,8 @@ See also `pos-tip-show-no-propertize'."
 	  (> (cdr w-h) max-height))
       (setq string (pos-tip-truncate-string string max-width max-height)
 	    w-h (pos-tip-string-width-height string))))
-    (face-spec-reset-face 'pos-tip-temp)
-    (with-selected-window window
-      (set-face-attribute
-       'pos-tip-temp nil
-       :font (frame-parameter frame 'font)
-       :foreground (pos-tip-compute-foreground-color tip-color)
-       :background (pos-tip-compute-background-color tip-color)))
     (pos-tip-show-no-propertize
-     (propertize string 'face 'pos-tip-temp)
+     (propertize string 'face tip-face-attrs)
      tip-color pos window timeout
      (pos-tip-tooltip-width (car w-h) (frame-char-width frame))
      (pos-tip-tooltip-height (cdr w-h) (frame-char-height frame) frame)

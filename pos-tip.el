@@ -6,7 +6,7 @@
 ;; Maintainer: S. Irie
 ;; Keywords: Tooltip
 
-(defconst pos-tip-version "0.4.5")
+(defconst pos-tip-version "0.4.6")
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -69,6 +69,11 @@
 
 
 ;;; History:
+;; 2013-07-16  P. Kalinowski
+;;         * Adjusted `pos-tip-show' to correctly set tooltip text foreground
+;;           color when using custom color themes.
+;;         * Version 0.4.6
+;;
 ;; 2010-09-27  S. Irie
 ;;         * Simplified implementation of `pos-tip-window-system'
 ;;         * Version 0.4.5
@@ -512,6 +517,26 @@ in FRAME. Return new mouse position like (FRAME . (X . Y))."
 	  (sit-for 0.0001))))
     (cons mframe (and mpos (cons mx my)))))
 
+(defun pos-tip-compute-foreground-color (tip-color)
+  "Compute the foreground color to use for tooltip.
+
+TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
+If it is nil, use `pos-tip-foreground-color'."
+  (or (and (facep tip-color)
+           (face-attribute tip-color :foreground))
+      (car-safe tip-color)
+      pos-tip-foreground-color))
+
+(defun pos-tip-compute-background-color (tip-color)
+  "Compute the background color to use for tooltip.
+
+TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
+If it is nil, use `pos-tip-background-color'."
+  (or (and (facep tip-color)
+           (face-attribute tip-color :background))
+      (cdr-safe tip-color)
+      pos-tip-background-color))
+
 (defun pos-tip-show-no-propertize
   (string &optional tip-color pos window timeout pixel-width pixel-height frame-coordinates dx dy)
   "Show STRING in a tooltip at POS in WINDOW.
@@ -570,14 +595,8 @@ Example:
 	 (rx (if relative ax (- ax (car pos-tip-saved-frame-coordinates))))
 	 (ry (if relative ay (- ay (cdr pos-tip-saved-frame-coordinates))))
 	 (retval (cons rx ry))
-	 (fg (or (and (facep tip-color)
-		      (face-attribute tip-color :foreground))
-		 (car-safe tip-color)
-		 pos-tip-foreground-color))
-	 (bg (or (and (facep tip-color)
-		      (face-attribute tip-color :background))
-		 (cdr-safe tip-color)
-		 pos-tip-background-color))
+	 (fg (pos-tip-compute-foreground-color tip-color))
+	 (bg (pos-tip-compute-background-color tip-color))
 	 (use-dxdy (or relative
 		       (not x-frame)))
 	 (spacing (frame-parameter frame 'line-spacing))
@@ -860,7 +879,11 @@ See also `pos-tip-show-no-propertize'."
 	    w-h (pos-tip-string-width-height string))))
     (face-spec-reset-face 'pos-tip-temp)
     (with-selected-window window
-      (set-face-font 'pos-tip-temp (frame-parameter frame 'font)))
+      (set-face-attribute
+       'pos-tip-temp nil
+       :font (frame-parameter frame 'font)
+       :foreground (pos-tip-compute-foreground-color tip-color)
+       :background (pos-tip-compute-background-color tip-color)))
     (pos-tip-show-no-propertize
      (propertize string 'face 'pos-tip-temp)
      tip-color pos window timeout

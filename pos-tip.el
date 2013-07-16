@@ -888,7 +888,7 @@ Note that this function does't correctly work for X frame and Emacs 22."
 	 (pos-tip-border-width 0)
 	 (pos-tip-internal-border-width 1)
 	 (rpos (pos-tip-show ""
-			     '(nil . (frame-parameter frame 'background-color))
+			     `(nil . ,(frame-parameter frame 'background-color))
 			     (window-start window) window
 			     nil nil 'relative nil 0)))
     (sit-for 0)

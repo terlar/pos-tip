@@ -940,7 +940,7 @@ Note that this function is usable only in Emacs 23 for MS-Windows."
 	      (cons (frame-pixel-width)
 		    (+ (frame-pixel-height)
 		       (- (cdr offset) (car offset)))))
-      (if (interactive-p)
+      (if (called-interactively-p 'interactive)
 	  (message "%S" pos-tip-w32-saved-max-width-height))
       (unless keep-maximize
 	;; Restore frame

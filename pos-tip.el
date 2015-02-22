@@ -218,29 +218,47 @@
 ;; Settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar pos-tip-border-width 1
-  "Outer border width of pos-tip's tooltip.")
+(defgroup pos-tip nil
+  "Show tooltip at point"
+  :group 'faces
+  :prefix "pos-tip-")
 
-(defvar pos-tip-internal-border-width 2
-  "Text margin of pos-tip's tooltip.")
+(defcustom pos-tip-border-width 1
+  "Outer border width of pos-tip's tooltip."
+  :type 'integer
+  :group 'pos-tip)
 
-(defvar pos-tip-foreground-color "black"
-  "Default foreground color of pos-tip's tooltip.")
+(defcustom pos-tip-internal-border-width 2
+  "Text margin of pos-tip's tooltip."
+  :type 'integer
+  :group 'pos-tip)
 
-(defvar pos-tip-background-color "lightyellow"
-  "Default background color of pos-tip's tooltip.")
+(defcustom pos-tip-foreground-color (face-foreground 'tooltip)
+  "Default foreground color of pos-tip's tooltip."
+  :type 'string
+  :group 'pos-tip)
 
-(defvar pos-tip-tab-width nil
+(defcustom pos-tip-background-color (face-background 'tooltip)
+  "Default background color of pos-tip's tooltip."
+  :type 'string
+  :group 'pos-tip)
+
+(defcustom pos-tip-tab-width nil
   "Tab width used for `pos-tip-split-string' and `pos-tip-fill-string'
-to expand tab characters. nil means use default value of `tab-width'.")
+to expand tab characters. nil means use default value of `tab-width'."
+  :type '(choice (const :tag "Default" nil)
+                 integer)
+  :group 'pos-tip)
 
-(defvar pos-tip-use-relative-coordinates nil
+(defcustom pos-tip-use-relative-coordinates nil
   "Non-nil means tooltip location is calculated as a coordinates
 relative to the top left corner of frame. In this case the tooltip
 will always be displayed within the frame.
 
 Note that this variable is automatically set to non-nil if absolute
-coordinates can't be obtained by `pos-tip-compute-pixel-position'.")
+coordinates can't be obtained by `pos-tip-compute-pixel-position'."
+  :type 'boolean
+  :group 'pos-tip)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions

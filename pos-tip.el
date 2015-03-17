@@ -543,7 +543,7 @@ in FRAME. Return new mouse position like (FRAME . (X . Y))."
   "Compute the foreground color to use for tooltip.
 
 TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
-If it is nil, use `pos-tip-foreground-color'or the foreground color of the
+If it is nil, use `pos-tip-foreground-color' or the foreground color of the
 `tooltip' face."
   (or (and (facep tip-color)
            (face-attribute tip-color :foreground))
@@ -851,10 +851,9 @@ using frame's default font with TIP-COLOR.
 Return pixel position of tooltip relative to top left corner of frame as
 a cons cell like (X . Y).
 
-TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR .
-BACKGROUND-COLOR) used to specify *only* foreground-color and
-background-color of tooltip.  If omitted, use
-`pos-tip-foreground-color' and `pos-tip-background-color' or the
+TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR)
+used to specify *only* foreground-color and background-color of tooltip. If
+omitted, use `pos-tip-foreground-color' and `pos-tip-background-color' or the
 foreground and background color of the `tooltip' face instead.
 
 Omitting POS and WINDOW means use current position and selected window,

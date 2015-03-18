@@ -894,8 +894,8 @@ See also `pos-tip-show-no-propertize'."
 	 (w-h (pos-tip-string-width-height string))
          (fg (pos-tip-compute-foreground-color tip-color))
          (bg (pos-tip-compute-background-color tip-color))
-         (tip-face-attrs (list :font (frame-parameter frame 'font)
-                               :foreground fg :background bg)))
+         (frame-font (find-font (font-spec :name (frame-parameter frame 'font))))
+         (tip-face-attrs (list :font frame-font :foreground fg :background bg)))
     (cond
      ((and width
 	   (> (car w-h) width))

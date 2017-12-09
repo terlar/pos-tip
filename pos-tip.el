@@ -822,10 +822,12 @@ of display. Omitting FRAME means use display that selected frame is in."
 
 (defun pos-tip-tooltip-width (width char-width)
   "Calculate tooltip pixel width."
-  (+ (* width char-width)
+  (+ (* width (- char-width
+                 left-margin-width
+                 right-margin-width))
      (ash (+ pos-tip-border-width
-	     pos-tip-internal-border-width)
-	  1)))
+             pos-tip-internal-border-width)
+          1)))
 
 (defun pos-tip-tooltip-height (height char-height &optional frame)
   "Calculate tooltip pixel height."
